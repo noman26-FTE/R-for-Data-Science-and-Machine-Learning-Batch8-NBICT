@@ -1,0 +1,90 @@
+---
+title: "Lesson3"
+author: 'noman'
+output: html_document
+---
+
+# Lesson3: R Markdown and Basic Functions
+
+## Read the 'datasets.xlsx'
+
+R can not read an xl dataset directly. So, first install `readxl`, then load it to use its `read.xl()` fuction.
+
+#To install the package or library , consol:install.packages('readxl'), or Tools\>Install Packages, or Packages in the file pane.\
+
+#To insert a command line: click C+. or `ctrl+alt+i`
+
+```{r}
+library(readxl)
+df=read_excel('datasets.xlsx', sheet = 'wrangling', range = 'B7:N507')
+head(df)
+
+
+```
+
+```{r}
+tail(df)
+
+```
+
+#Calculating the column sum, excluding the colm no 1, only for 1 to 50 rows
+
+```{r}
+colSums(df[c(1:50),c(2:13)])
+```
+
+#To see the full `dataset`, excluding the 1st colm containing the money scarcity information
+
+```{r}
+colSums(df[-1])
+```
+
+Now give a name for this object and such as scarcity. Then express the frequency as percentage.
+
+```{r}
+scarcity=colSums(df[-1])*100/nrow(df)
+scarcity
+```
+
+#Visualize this month wise scarcity using ggplot [ggplot2 package]. First install ggplot2 package.
+
+Scarcity is not a data frame but ggplot fumnction need data frame(with a few variables). convert scarcity to a data frame df_scarcity.
+
+convert the row names to column named as `month` by using `dplyr`.
+
+```{r}
+library(tidyverse)
+
+#convert to data frame
+df_scarcity=as.data.frame(scarcity)
+
+#Transfer the row names to column as 'Month'
+df_plot=rownames_to_column(df_scarcity, var= 'Month')
+
+#Check the structure and dataframe
+str(df_plot)
+df_plot
+```
+
+Now visualization. To set the order of the month names we need to reorder the month names using
+
+```{r}
+df_plot$Month= factor(df_plot$Month, 
+                      levels = c('jan', 'feb', 'mar','apr','may', 'jun', 'jul','aug','sep', 'oct', 'nov', 'dec'),
+                      labels = c('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'))
+
+
+```
+
+```{r}
+ggplot(df_plot)+
+  aes(x=Month, y=scarcity, color=Month, fill=Month)+
+  geom_col(width = .7)+
+  labs(x='', y= 'Money scarcity')+
+  geom_text(aes(label=scarcity,y=scarcity+2), color='grey40')+
+  theme_test()+
+  theme(legend.position = 'top')
+
+ggsave('my plot.png', dpi=500, height = 4.5, width = 8, units = 'in')
+
+```

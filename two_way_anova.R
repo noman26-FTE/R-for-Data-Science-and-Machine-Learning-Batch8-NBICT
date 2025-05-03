@@ -1,0 +1,7 @@
+library(readxl)
+library(tidyverse)
+library(BSDA)
+library(kableExtra)
+library(car)
+library(agricolae)
+library(sjstats)

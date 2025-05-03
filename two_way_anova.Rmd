@@ -1,0 +1,138 @@
+---
+title: "two_way_anova"
+output: Md.noman
+---
+
+library(tidyverse)
+
+```{r}
+library(readxl)
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+```
+
+```{r}
+library(agricolae)
+```
+
+```{r}
+#read the dataset
+rabbit<-read_excel('datasets.xlsx', sheet = 'anova', range = 'j14:o77')
+glimpse(rabbit)
+```
+
+```{r}
+#dependent variable: weight
+#independent variable: trt and replication
+rabbit$Replication=as.factor(rabbit$Replication)
+rabbit$Treatment=as.factor(rabbit$Treatment)
+rabbit$Day=as.factor(rabbit$Day)
+str(rabbit)
+#anova model: aov (dv-iv+iv...., data)
+mod=aov(Weight~Replication+Treatment+Day, data=rabbit)
+anova(mod)
+```
+
+replications do not have any effects on the weight of the rabbits. So, local control was alright. Now, we will remove this replication from the model. However, we will add interaction term in the model.
+
+```{r}
+mod_int=aov(Weight~Treatment+Day+Treatment:Day, data=rabbit)
+anova(mod_int)
+```
+
+we see that treatment (control, probiotic and antibiotic) and day intervals along with
+
+```{r}
+# interaction.plot(x.factor = rabbit$Day, trace.factor = rabbit$Treatment, response = rabbit$Weight)
+
+with(rabbit, interaction.plot(Day, Treatment, Weight))
+```
+
+This figure shows that the effect of treatments increased with the increasing with the date of observation. In the earlier days , the effects of the treatments were lower while in the later days the effects
+
+```{r}
+library(ggpubr)
+boxplot(Weight~Day*Treatment, rabbit)
+ggqqplot(rabbit, x='Weight', facet.by = c('Treatment','Day'))
+```
+
+we will now check the residuals (Obs values-Predict value).
+
+```{r}
+plot(mod_int, which = 1)
+```
+
+```{r}
+car::leveneTest(Weight~Day*Treatment, rabbit)
+```
+
+## Few other important statistics of ANOVA
+
+CV of dependent variable= 46.31%
+
+CV of the model: quality of model fir=4.15%= very low level of error in model= good fit
+
+n2 (eta sqr)= variance explained by the factor
+
+Pot-hoc analysis to which means are different
+
+```{r}
+# create a fucntion to calculate cv
+cv=function (x){sd(x)/mean(x)*100}
+#calculate cv of the dependent variable
+sd(rabbit$Weight)/mean(rabbit$Weight)*100
+cv(rabbit$Weight)
+
+```
+
+```{r}
+#Model CV=4.146751
+#Model std error= Residual standard error= residual std=1.048733
+1.048733/mean(rabbit$Weight)*100
+
+```
+
+variance explained by different factors(eta sqr): Trt explained 6.3% of the variance in the
+
+```{r}
+library(sjstats)
+anova_stats(mod_int)
+
+```
+
+post hoc analysis by tukey
+
+```{r}
+posthoc=HSD.test(mod_int,trt = c('Treatment','Day'), console=TRUE)
+
+```
+
+## Visualization of group means with letters and 95% confidence intervals
+
+```{r}
+group1= posthoc$means[ , c(2:3)] %>%rownames_to_column('combination')
+group2= posthoc$groups %>% rownames_to_column('combination')
+group= left_join(group1, group2, by ='combination'); group
+plot_data= group %>%mutate(
+  ll = Weight - 1.96*(std/sqrt(r)),
+  ul= Weight + 1.96*(std/sqrt(r))
+  )
+plot_data
+
+```
+
+```{r}
+ggplot(plot_data)+
+  aes(x=combination, y= Weight, fill = combination) + 
+  geom_col()+
+  geom_text(aes(label=round(Weight,0),y=Weight-5))+
+  geom_text(aes(label=groups,y=Weight+5), color='blue')+
+  geom_errorbar(aes(ymin=ll,ymax=ul), width= 0.2, alpha= 0.7)+
+  theme_test()+
+  theme(legend.position = 'none')+
+labs(x='combination(Treatment:Day)', y='Average weight (kg)')+
+  theme(axis.text.x = element_text(angle=90, vjust=.4,hjust = 1))
+  
+#ggsave('Anova.png', dpi=600, height=6, width = 8, units = 'in')
+```
