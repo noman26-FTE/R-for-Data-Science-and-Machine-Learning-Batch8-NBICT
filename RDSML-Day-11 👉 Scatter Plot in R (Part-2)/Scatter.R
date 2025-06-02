@@ -11,7 +11,7 @@ ggplot(dataset, aes(x = wt, y = mpg)) +
 ggplot(dataset, aes(x = wt, y = mpg)) +
   geom_point(size=1, shape=18)
 
-# Adding the regression line
+# Adding the regression line (lm=linear method)
 ggplot(dataset, aes(x = wt, y = mpg)) +
   geom_point(size=1, shape=18) +
   geom_smooth(method = lm)
@@ -21,7 +21,11 @@ ggplot(dataset, aes(x = wt, y = mpg)) +
   geom_point() +
   geom_smooth(method = lm, se = FALSE)
 
-# Loess method
+
+#line calles best feed line and shadow called confidence interval
+
+
+# Loess method, basically used for non-linear regression. How much data are scattered. 
 ggplot(dataset, aes(x = wt, y = mpg)) +
   geom_point() +
   geom_smooth()
@@ -29,14 +33,12 @@ ggplot(dataset, aes(x = wt, y = mpg)) +
 # Change the line type and color
 ggplot(dataset, aes(x = wt, y = mpg)) +
   geom_point(size=1, shape=18) +
-  geom_smooth(method = lm, linetype = "dashed", 
-              color = "darkblue")
+  geom_smooth(method = lm, linetype = "dashed", color = "darkblue")
 
 # Changing the confidence interval color
 ggplot(dataset, aes(x = wt, y = mpg)) +
   geom_point(size=1, shape=18, color = "blue") +
-  geom_smooth(method = lm, linetype = "dashed", 
-              color = "darkred", fill = "blue")
+  geom_smooth(method = lm, linetype = "dashed", color = "darkred", fill = "blue")
 
 # Scatter plots with multiple groups
 
