@@ -36,7 +36,7 @@ ggplot(dataset, aes(x= weight)) +
 
 #Density plot mainly smooth plot of histogram, it is used to see the distribution of data
 
-#Changing the line color and bar color
+#Changing the bin border color and bar fill color
 
 ggplot(dataset, aes(x= weight)) + 
   geom_histogram(binwidth= 1, color= 'darkblue', fill= 'lightblue')
