@@ -22,3 +22,4 @@ d_summary = data_summary(tooth_data, varname = 'len', groupnames = c('dose', 'su
 
 d_summary
 
+
