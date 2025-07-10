@@ -1,0 +1,25 @@
+Time (Sec.),Force (g),Sample
+0,50,Nutrinos
+0.5,150,Nutrinos
+1,300,Nutrinos
+1.5,500,Nutrinos
+2,600,Nutrinos
+2.5,0,Nutrinos
+3,0,Nutrinos
+3.5,0,Nutrinos
+0,60,Safari
+0.5,850,Safari
+1,30,Safari
+1.5,20,Safari
+2,10,Safari
+2.5,0,Safari
+3,0,Safari
+3.5,0,Safari
+0,55,Cerea
+0.5,450,Cerea
+1,600,Cerea
+1.5,900,Cerea
+2,900,Cerea
+2.5,900,Cerea
+3,0,Cerea
+3.5,0,Cerea

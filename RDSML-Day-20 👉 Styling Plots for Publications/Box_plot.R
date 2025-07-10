@@ -76,7 +76,8 @@ ggsave("Box_plot.png", width = 8, height = 6, dpi = 300)
 # Loading data set
 
 library(readr)
-Book1 <- read_csv("R-for-Data-Science-and-Machine-Learning-Batch8-NBICT/RDSML-Day-19 👉 Box and Whisker Plot in R/Book1.csv")
+Book1 <- read_csv("Book1.csv")
+View(Book1)
 View(Book1)
 
 # Load required package
@@ -92,22 +93,27 @@ data <- data.frame(
   ),
   Sample = rep(c("Nutrinos", "Safari", "Cerea"), each = 8)
 )
-
+library(ggplot2)
+install.packages("ggthemes")
+library(ggthemes)
+install.packages("viridis")
+library(viridis)
 # Plot using ggplot2
 ggplot(data, aes(x = Time, y = Force, color = Sample)) +
   geom_line(size = 0.5) +
   geom_point(size = 2) +
-  scale_color_manual(values = c("Nutrinos" = "blue", "Safari" = "brown", "Cerea" = "green")) +
+  scale_color_viridis_d(name='Cookies') +
   labs(
     title = "Three Point Bend Test",
     x = "Time (Seconds)",
     y = "Force (g)",
     color = "Sample"
   ) +
-  theme_minimal(base_size = 14) +
-  theme(plot.title = element_text(face = "bold", size = 15),
-    axis.title = element_text(face = "bold"),
-    legend.title = element_text(face = "bold"),
-    legend.position = "top")
+  theme_classic(base_size = 14, base_family = "serif")+ 
+  theme(plot.title= element_text(face='bold', size = 16, hjust= 0.5), 
+        axis.title= element_text(face='bold', size=14, hjust=0.5),
+        axis.text= element_text(size= 12),
+        legend.position = "right", 
+        legend.title= element_text(face='bold'), legend.text= element_text(size=12))
 # Save the plot
-ggsave("Three_Point_Bend_Test.png", width = 8, height = 6, dpi = 300)
+ggsave("Three_Point_Bend_Test_new.png", width = 6, height = 4, dpi = 300)
