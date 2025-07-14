@@ -99,12 +99,12 @@ library(ggthemes)
 install.packages("viridis")
 library(viridis)
 # Plot using ggplot2
-ggplot(data, aes(x = Time, y = Force, color = Sample)) +
+n= ggplot(data, aes(x = Time, y = Force, color = Sample)) +
   geom_line(size = 0.5) +
   geom_point(size = 2) +
   scale_color_viridis_d(name='Cookies') +
   labs(
-    title = "Three Point Bend Test",
+    title = "Hardness Test of Cookies",
     x = "Time (Seconds)",
     y = "Force (g)",
     color = "Sample"
@@ -116,4 +116,4 @@ ggplot(data, aes(x = Time, y = Force, color = Sample)) +
         legend.position = "right", 
         legend.title= element_text(face='bold'), legend.text= element_text(size=12))
 # Save the plot
-ggsave("Three_Point_Bend_Test_new.png", width = 6, height = 4, dpi = 300)
+ggsave("Three_Point_Bend_Test.png", n, width = 6, height = 4, dpi = 300)
