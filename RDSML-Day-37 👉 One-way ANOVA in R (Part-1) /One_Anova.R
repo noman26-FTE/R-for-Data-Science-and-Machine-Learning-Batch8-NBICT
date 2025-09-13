@@ -70,3 +70,44 @@ summary(anova)
 #From the summary we can see that the p-value is less than 0.05
 #So we reject the null hypothesis and accept the alternative hypothesis
 #So we can say that at least one group mean is different
+
+#Tukey multiple pairwise comparison
+
+TukeyHSD(anova)
+
+#Homogeneity of variance test
+plot(anova, 1)
+
+#Homoscedasticity test
+install.packages("car")
+library(car)
+leveneTest(weight ~ group, data = PlantGrowth)
+#From the Levene's test we can see that the p-value is greater than 0.05
+#So we accept the null hypothesis and say that the variances are equal
+
+#If the variances are not equal we can use Welch ANOVA
+#oneway.test(weight ~ group, data = PlantGrowth)
+#Pairwise t test with no assumption of equal variances
+#pairwise.t.test(PlantGrowth$weight, PlantGrowth$group,p.adjust.method = "BH", pool.sd = FALSE)
+
+#Normality test
+plot(anova, 2)
+
+#Extracting residuals
+aov_res = residuals(object = anova)
+aov_res
+
+#Running Shapiro-Wilk test
+
+shapiro.test(aov_res)
+
+#From the Shapiro-Wilk test we can see that the p-value is greater than 0.05
+#So we accept the null hypothesis and say that the data is normally distributed
+
+#If the data is not normally distributed we can use Kruskal-Wallis test
+kruskal.test(weight ~ group, data = PlantGrowth)
+#Pairwise wilcoxon test for post hoc analysis
+pairwise.wilcox.test(PlantGrowth$weight, PlantGrowth$group, p.adjust.method = "BH")
+
+#rnorm(3, mean = 104.28, sd = 0.38)
+
