@@ -40,3 +40,44 @@ ggplot(summs, aes(x = irr, y = mean, group = fert , color = fert)) +
        x = "Irrigation",
        y = "Mean Crop Yield") +
   theme_classic(base_size = 12)
+
+
+#Part-2 of Two Way Anova
+
+#Fitting the two way anova model
+
+m = aov(y ~ fert + irr + fert * irr, data = d)
+summary(m)
+
+#Checking anova assumptions visually
+par(mfrow = c(2,2))
+plot(m)
+par(mfrow = c(1,1))
+
+#Checking the residulas normality
+res = residuals(m)
+shapiro.test(res)
+#p-value > 0.05, we can assume normality
+
+#Checking homogeneity of variance
+library(car)
+leveneTest(y~fert * irr, data = d, center = median)
+#p-value > 0.05, we can assume homogeneity of variance
+#If the assumptions are not met, we can use transformations or non-parametric tests
+
+#For example, we can use log transformation
+d$log_y = log(d$y)
+m2 = aov(log_y ~ fert + irr + fert * irr, data = d)
+summary(m2)
+par(mfrow = c(2,2))
+plot(m2)
+par(mfrow = c(1,1))
+res2 = residuals(m2)
+shapiro.test(res2)
+leveneTest(log_y~fert * irr, data = d, center = median)
+
+#Interaction contrasts (simple effects): effect of fert at each level of irr
+library(emmeans)
+contrast(emmeans(m, ~ fert | irr), method = "pairwise", adjust = "tukey")
+
+
