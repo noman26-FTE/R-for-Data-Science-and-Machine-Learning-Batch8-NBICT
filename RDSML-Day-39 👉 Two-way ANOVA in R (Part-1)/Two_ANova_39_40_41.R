@@ -80,4 +80,20 @@ leveneTest(log_y~fert * irr, data = d, center = median)
 library(emmeans)
 contrast(emmeans(m, ~ fert | irr), method = "pairwise", adjust = "tukey")
 
+#Interaction contrasts (simple effects): effect of irr at each level of fert
+library(emmeans)
+contrast(emmeans(m, ~ irr | fert), method = "pairwise", adjust = "tukey")
 
+#Main effect comparison (only if interation is negligible)
+
+contrast(emmeans(m, ~ fert), method ="tukey")
+contrast(emmeans(m, ~ irr), method ="tukey")
+
+#CLD LETTERS
+
+library(multcomp)
+#install.packages("multcompView")
+library(multcompView)
+
+group_letters = cld(emmeans(m, ~ fert * irr), Letters = letters)
+group_letters
