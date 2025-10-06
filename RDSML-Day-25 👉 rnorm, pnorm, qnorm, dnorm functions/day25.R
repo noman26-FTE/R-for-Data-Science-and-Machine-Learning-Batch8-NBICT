@@ -35,3 +35,5 @@ zvalues = seq(-4.0, 4.0, by = 0.1)
 
 dvalues = dnorm(zvalues)
 plot(zvalues, dvalues)
+
+
