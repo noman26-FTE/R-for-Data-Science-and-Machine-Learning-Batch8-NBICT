@@ -50,3 +50,70 @@ chisq$stdres
 #Visualizing the standardized residuals
 library('corrplot')
 corrplot(chisq$stdres, is.corr=FALSE, tl.col="black")
+
+
+
+
+
+#Instructor repositior
+# Importing the dataset
+housetasks <- read.delim("housetasks.txt", row.names = 1)
+
+# Contingency table can be visualized using the function 
+# balloonplot(). This function draws a graphical matrix where
+# each cell contains a dot whose size reflects the relative
+# magnitude of the corresponding component.
+
+install.packages("gplots")
+library("gplots")
+dt <- as.table(as.matrix(housetasks))
+balloonplot(t(dt), main = "Housetasks Visualization", 
+            label = F, show.margins = F, 
+            xlab = "", ylab = "")
+
+# It's also possible to visualize a contingency table
+# as a mosaic plot. This can be done using the function
+# mosaicplot() from the built-in R package graphics.
+
+library("graphics")
+mosaicplot(dt, shade = T, las = 2,
+           main = "Housetasks")
+
+# Blue color indicates that the observed value is higher
+# than the expected value. Red color indicates that the
+# observed value is lower than the expected value.
+
+# Computing chi-square test in R
+chisq <- chisq.test(housetasks)
+chisq
+
+# Observed counts
+chisq$observed
+
+# Expected counts
+round(chisq$expected,2)
+
+# RAW Residuals calculation
+chisq$observed - round(chisq$expected,2)
+
+# Standardized (Pearson) residuals calculation
+#Residuals means the difference between observed and expected values.
+
+round(chisq$residuals, 3)
+
+# Adjusted Standardized Residuals calculation (Not necessary for all cases)
+chisq$stdres
+
+# Visualize Pearson residuals using the package corrplot
+install.packages("corrplot")
+library(corrplot)
+corrplot(chisq$residuals, is.cor = FALSE)
+
+#Is.cor true when ranges -1 to 1
+
+# Contribution in percentage (%)
+contrib <- 100 * chisq$residuals^2 / chisq$statistic
+round(contrib, 3)
+
+# Visualize the contribution
+corrplot(contrib, is.cor = FALSE)
