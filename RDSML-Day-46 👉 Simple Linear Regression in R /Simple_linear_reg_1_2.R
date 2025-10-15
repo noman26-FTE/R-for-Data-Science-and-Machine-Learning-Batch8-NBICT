@@ -79,3 +79,5 @@ ggplot() +
   ggtitle('salary vs Experience')+
   xlab('years of Experience')+
   ylab('salary')
+
+#How to score model accuracy

@@ -65,3 +65,5 @@ cohen.d(data$carb, data$carb_protein, paired=TRUE)
 
 #Writing the result in APA format
 #A paired sample t test was conducted to whether there is a significant difference between the distance ran when participants imbibed carbohydrate drink and carbohydrate-protein drink. No outliers were detected in the differences between the two related groups as assessed by boxplot. The differences between the two related groups were approximately normally distributed, as assessed by Shapiro-Wilk's test (p = 0.77). There was a significant difference in the distance ran when participants imbibed carbohydrate drink (M = 11.16, SD = 0.726) and carbohydrate-protein drink (M = 11.30225, SD = 0.7136793); t(14) = -4.49, p = 0.0001742, Cohen's d = -0.186, indicating a small effect size. These results suggest that the type of drink consumed has a significant effect on the distance ran by participants.
+
+rnorm(3, mean=78.16, sd=0.25)
