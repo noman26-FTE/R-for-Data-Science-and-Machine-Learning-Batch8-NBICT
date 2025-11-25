@@ -90,6 +90,7 @@ lm_mae = mae(test_scaled$cnt, lm_pred)
 lm_mae
 
 #Building a Support Vector Regression (SVR) model
+#Kernel is a mathematical function used to transform data into a higher dimension to make it easier to find a separating hyper plane.
 
 svr_model = svm(cnt ~ ., data = train_scaled, type = "eps-regression", kernel = "linear")
 summary(svr_model)
@@ -108,9 +109,53 @@ svr_mae
 
 
 #Comparing Linear Regression and SVR performance
-comparison = data.frame(
-  Model = c("Linear Regression", "Support Vector Regression"),
-  RMSE = c(lm_rmse, svr_rmse),
-  MAE = c(lm_mae, svr_mae)
+svr_rmse;svr_mae
+lm_rmse;lm_mae
+
+#Nonlinear SVR with RBF kernel
+
+svr_rbf = svm(
+  cnt ~ .,
+  data = train_scaled,
+  kernel = "radial",
+  cost = 10,
+  gamma = 0.1,
+  epsilon = 0.1
+  )
+summary(svr_rbf)
+
+# Predicting on test set
+svr_rbf_pred = predict(svr_rbf, newdata = test_scaled)
+
+#Evaluation metrics for RBF SVR
+svr_rbf_rmse = rmse(test_scaled$cnt, svr_rbf_pred)
+svr_rbf_rmse
+svr_rbf_mae = mae(test_scaled$cnt, svr_rbf_pred)
+svr_rbf_mae
+
+#Comparing all three models
+svr_rbf_rmse;svr_rbf_mae
+svr_rmse;svr_mae
+lm_rmse;lm_mae
+
+
+#Visualizing predictions
+results = data.frame(
+  Actual = test_scaled$cnt,
+  Linear_Regression = lm_pred,
+  SVR_Linear = svr_pred,
+  SVR_RBF = svr_rbf_pred
 )
-print(comparison)
+results_long = results %>%
+  tidyr::pivot_longer(
+    cols = -Actual,
+    names_to = "Model",
+    values_to = "Predicted"
+  )
+ggplot(results_long, aes(x = Actual, y = Predicted, color = Model)) +
+  geom_point(alpha = 0.6) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black") +
+  labs(title = "Model Predictions vs Actual Values",
+       x = "Actual Values",
+       y = "Predicted Values") +
+  theme_minimal()
