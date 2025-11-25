@@ -62,3 +62,55 @@ scale_num = function(df){
 
 #Apply scaling
 train_scaled = scale_num(train_set)
+test_scaled = scale_num(test_set)
+
+#Building a linear regression (multiple) model
+
+lm_model = lm(cnt ~ ., data = train_scaled)
+summary(lm_model)
+
+# Predicting on test set
+
+lm_pred = predict(lm_model, newdata = test_scaled)
+
+#Evaluation metrics for linear regression
+
+#Calculating root mean squared error (RMSE)
+
+rmse = function(actual, pred) sqrt(mean((actual-pred)^2))
+
+lm_rmse = rmse(test_scaled$cnt, lm_pred)
+
+lm_rmse
+
+#Calculating mean absolute error (MAE)
+
+mae = function(actual, pred) mean(abs(actual - pred))
+lm_mae = mae(test_scaled$cnt, lm_pred)
+lm_mae
+
+#Building a Support Vector Regression (SVR) model
+
+svr_model = svm(cnt ~ ., data = train_scaled, type = "eps-regression", kernel = "linear")
+summary(svr_model)
+
+# Predicting on test set
+svr_pred = predict(svr_model, newdata = test_scaled)
+
+#Evaluation metrics for SVR
+#Calculating root mean squared error (RMSE)
+svr_rmse = rmse(test_scaled$cnt, svr_pred)
+svr_rmse
+
+#Calculating mean absolute error (MAE)
+svr_mae = mae(test_scaled$cnt, svr_pred)
+svr_mae
+
+
+#Comparing Linear Regression and SVR performance
+comparison = data.frame(
+  Model = c("Linear Regression", "Support Vector Regression"),
+  RMSE = c(lm_rmse, svr_rmse),
+  MAE = c(lm_mae, svr_mae)
+)
+print(comparison)
